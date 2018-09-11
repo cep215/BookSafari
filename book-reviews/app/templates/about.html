@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+
+{% block app_content %}
+
+    <script>
+
+        function agree() {
+            var x = document.getElementById("agree");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+
+        function debate() {
+            var x = document.getElementById("debate");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+    </script>
+
+
+    <img src="/static/images/about.png" width="100%"/>
+    <hr>
+    <p>
+        <li style="font-size: medium;">If you are a hopeless reader and you also enjoy discussing your newest or favourite books with others this is going to be your next favourite website.</li>
+        <br>
+        <li style="font-size: medium;">Create and personalise your profile. Search for your favourite books and engage in meaningful discussions with other book lovers.</li>
+    </p>
+
+    <hr>
+        <button onclick="agree()" class="btn btn-default" style="font-size: medium; font-weight: bold;">Agree or disagree with other people</button>
+    <hr>
+    <div style="display:none;" id="agree">
+        <img src="/static/images/agree.gif" width="100%"/>
+    </div>
+
+    <hr>
+        <button onclick="debate()" class="btn btn-default" style="font-size: medium; font-weight: bold;">Visualize debate flow</button>
+    <hr>
+    <div style="display:none;" id="debate">
+        <img src="/static/images/debate_flow.gif" width="100%"/>
+    </div>
+
+{% endblock %}

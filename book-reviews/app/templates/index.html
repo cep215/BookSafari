@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+
+{% block app_content %}
+    <script>{{ script | safe }}</script>
+
+    <h2>Hi, {{ current_user.username }}!</h2>
+
+    {%- for user_post in followed_posts recursive %}
+        <li class="list-group-item" style="border: 5px solid #ddd;"> {% include '_post_index.html' %}
+        {%- if user_post.children -%}
+            <ul class="list-group" style="border: 2px solid #ddd;">{{ loop(user_post.children) }}</ul>
+        {%- endif %}
+        </li>
+    {%- endfor %}
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> Newer posts
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    Older posts <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}

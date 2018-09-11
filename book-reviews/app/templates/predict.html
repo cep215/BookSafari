@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Register</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+
+    <h4>
+        Result LinearSVC: <span style="color: mediumblue;">{{ result_LinearSVC }}</span>
+    </h4>
+    {{ f1_LinearSVC }}
+    {{ acc_LinearSVC }}
+
+    <h4>
+        Result NuSVC: <span style="color: mediumblue;">{{ result_NuSVC }}</span>
+    </h4>
+    {{ f1_NuSVC }}
+    {{ acc_NuSVC }}
+    <h4>
+        Result DecisionTree: <span style="color: mediumblue;">{{ result_DecisionTree }}</span>
+    </h4>
+    {{ f1_DecisionTree }}
+    {{ acc_DecisionTree }}
+    <h4>
+        Result Sentiment: <span style="color: mediumblue;">{{ result_sentiment }}</span>
+    </h4>
+{% endblock %}

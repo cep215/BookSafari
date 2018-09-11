@@ -1,0 +1,130 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+    function agree_{{ book_post.id }}() {
+        var x = document.getElementById("description_agree_{{ book_post.id }}");
+        var y = document.getElementById("description_disagree_{{ book_post.id }}");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            y.style.display = "none";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+
+    function disagree_{{ book_post.id }}() {
+        var x = document.getElementById("description_agree_{{ book_post.id }}");
+        var y = document.getElementById("description_disagree_{{ book_post.id }}");
+        if (y.style.display === "none") {
+            y.style.display = "block";
+            x.style.display = "none";
+        } else {
+            y.style.display = "none";
+        }
+    }
+
+
+
+</script>
+
+<script>jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});</script>
+
+<style>
+.table-highlight tbody tr:hover {
+    background-color: #E8E8E8;
+}
+</style>
+
+ <table class="table table-hover">
+        <tr>
+            <td width="50px">
+                <a href="{{ url_for('user', username=book_post.user.username) }}">
+                    <img width="70" src="{{ book_post.user.avatar(70) }}" />
+                </a>
+            </td>
+            {% if book_post.polarity == True %}
+            <td bgcolor = 'E3F1E6'>
+            {% else %}
+            <td bgcolor = 'EBC7CA'>
+            {% endif %}
+                <a href="{{ url_for('user', username=book_post.user.username) }}">
+                    {{ book_post.user.username }}
+                </a>
+                said {{ moment(book_post.timestamp).fromNow() }}:
+                <br>
+                {{ book_post.body | safe }}
+                {%if book_post.user == current_user %}
+                <br>
+{#                <button type="button" class="btn btn-warning">Edit</button>#}
+                <a href="{{ url_for('delete_post_tree', post_id=book_post.id) }}" class="btn btn-danger" role="button">Delete</a>
+
+                {% else %}
+                <br>
+                <input type="image" src="/static/images/agree.png" width = "40" onclick="agree_{{ book_post.id }}()"/>
+                <input type="image" src="/static/images/disagree.png" width = "40" onclick="disagree_{{ book_post.id }}()"/>
+
+                <div style="display:none;" id="description_agree_{{book_post.id}}">
+                    {% if form_agree %}
+                    <form class="form" method="post">
+                        {{ form_agree.hidden_tag() }}
+                        {{ wtf.form_errors(form_agree, hiddens="only") }}
+                        {{ wtf.form_field(form_agree.post, style = "background-color: #E3F1E6;") }}
+                        {{ wtf.form_field(form_agree.submit_agree) }}
+                        <input type="hidden" name="post_id" value="{{ book_post.id }}">
+                    </form>
+                    <br>
+                    {% endif %}
+                </div>
+
+                <div style="display:none;" id="description_disagree_{{book_post.id}}">
+                    {% if form_disagree %}
+                    <form class="form" method="post">
+                        {{ form_disagree.hidden_tag() }}
+                        {{ wtf.form_errors(form_disagree, hiddens="only") }}
+                        {{ wtf.form_field(form_disagree.post, style = "background-color: #EBC7CA;;") }}
+                        {{ wtf.form_field(form_disagree.submit_disagree) }}
+                        <input type="hidden" name="post_id" value="{{ book_post.id }}">
+                    </form>
+                    <br>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+            </td>
+
+            <td width="70">
+                <input type="image"  src="/static/images/tree.png" width = "60" onclick="location.href='{{ url_for('tree_func', post_id=book_post.id) }}';"/>
+            </td>
+        </tr>
+        {% if not book_post.was_answered_by(current_user) %}
+        {% if book_post.parent and book_post.user != current_user %}
+        <tr align="right">
+            {%  if book_post.polarity==True %}
+            <h4> Is this really an agreeing  comment?
+            {% else %}
+            <h4> Is this really a disagreeing comment?
+            {% endif %}
+            <button data-toggle="modal" data-target="#id{{ book_post.id }}" class="btn btn-default">Annotate</button>
+            {% include '_annotation_modal_user.html' %}
+            </h4>
+        </tr >
+        {% elif book_post.user != current_user %}
+        <tr align="right">
+            {%  if book_post.polarity==True %}
+            <h4> Is this really a positive review?
+            {% else %}
+            <h4> Is this really a negative review?
+            {% endif %}
+            <button data-toggle="modal" data-target="#id{{ book_post.id }}" class="btn btn-default">Annotate</button>
+            {% include '_annotation_modal_user.html' %}
+            </h4>
+        </tr>
+        {% endif %}
+        {% endif %}
+
+    </table>

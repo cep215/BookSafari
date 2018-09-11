@@ -1,0 +1,68 @@
+/* How to display neutral, positive and negative nodes*/
+.Treant .node { padding: 15px; border-radius: 3px; border-width: 2px; border-style: solid;}
+
+.Treant .positive { border-color: #96BE5B; height: 20px; width: 20px;}
+.Treant .negative { border-color: #B84B46; height: 20px; width: 20px;}
+
+.Treant .neutral-selected { border-color: black; height: 20px; width: 20px; background-color: black;}
+.Treant .positive-selected { border-color: #96BE5B; height: 20px; width: 20px; background-color: #96BE5B;}
+.Treant .negative-selected { border-color: #B84B46; height: 20px; width: 20px; background-color: #B84B46;}
+
+
+
+
+/* Popup container - can be anything you want */
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 25%;
+    left: 50%;
+    margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+    visibility: visible;
+
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}

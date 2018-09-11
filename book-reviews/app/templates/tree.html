@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="/static/js/jquery.easing.js"></script>
+    <link rel="stylesheet" href="/static/css/Treant.css">
+    <link rel="stylesheet" href="/static/css/tree.css">
+    <div class="chart" id="tree-container"></div>
+    <script src="/static/js/raphael.js"></script>
+    <script src="/static/js/Treant.js"></script>
+
+    <script>{{ tree|safe }}</script>
+
+    <script>
+        tree = new Treant( chart_config );
+    </script>
+
+    {%- for book_post in book_posts recursive %}
+        <li class="list-group-item" style="border: 5px solid #ddd;"> {% include '_post_user.html' %}
+        {%- if book_post.children -%}
+            <ul class="list-group" style="border: 5px solid #ddd;">{{ loop(book_post.children) }}</ul>
+        {%- endif %}
+        </li>
+    {%- endfor %}
+{#    <h1>Tree of {{ post.body }}</h1>#}
+{% endblock %}

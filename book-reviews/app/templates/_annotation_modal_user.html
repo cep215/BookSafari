@@ -1,0 +1,98 @@
+<!-- Modal -->
+{% if not book_post.was_answered_by(current_user) %}
+    <div class="modal fade" id="id{{ book_post.id }}" role="dialog">
+        <div class="modal-dialog">
+
+        <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Annotate</h4>
+                </div>
+                {% if book_post.parent %}
+                <div class="modal-body">
+                    {%  if book_post.polarity==True %}
+                        <h3 style="font-weight: normal;">Is
+                            <a href="url_for('user', username=book_post.user.username)">
+                                {{ book_post.user.username }}
+                            </a> really <span style="color: green; font-weight: bold;">agreeing</span> with
+                            <a href="url_for('user', username=book_post.parent.user.username)">
+                                {{ book_post.parent.user.username }}
+                            </a> in the following comments?
+                        </h3>
+                    {% else %}
+                        <h3 style="font-weight: normal;">Is
+                            <a href="url_for('user', username=book_post.user.username)">
+                                {{ book_post.user.username }}
+                            </a> really <span style="color: red; font-weight: bold;">disagreeing</span> with
+                            <a href="url_for('user', username=book_post.parent.user.username)">
+                                {{ book_post.parent.user.username }}
+                            </a> in the following comments?
+                        </h3>
+                    {% endif %}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div style="font-size: small; font-weight: normal;">
+                            <a href="{{ url_for('user', username=book_post.parent.user.username) }}">
+                                {{ book_post.parent.user.username }}
+                            </a>
+                            said {{ moment(book_post.parent.timestamp).fromNow() }}:
+                            </div>
+                            {{ book_post.parent.body }}
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div style="font-size: small; font-weight: normal;">
+                            <a href="{{ url_for('user', username=book_post.user.username) }}">
+                                {{ book_post.user.username }}
+                            </a>
+                            said {{ moment(book_post.timestamp).fromNow() }}:
+                            </div>
+                            {{ book_post.body }}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="modal-body">
+                    {%  if book_post.polarity==True %}
+                        <h3 style="font-weight: normal;">Is
+                            <a href="url_for('user', username=book_post.user.username)">
+                                {{ book_post.user.username }}
+                            </a>'s post really a <span style="color: green; font-weight: bold;">positive</span> review?
+                        </h3>
+                    {% else %}
+                        <h3 style="font-weight: normal;">Is
+                            <a href="url_for('user', username=book_post.user.username)">
+                                {{ book_post.user.username }}
+                            </a>'s post really a <span style="color: red; font-weight: bold;">negative</span> review?
+                        </h3>
+                    {% endif %}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div style="font-size: small; font-weight: normal;">
+                            <a href="{{ url_for('user', username=book_post.user.username) }}">
+                                {{ book_post.user.username }}
+                            </a>
+                            said {{ moment(book_post.timestamp).fromNow() }}:
+                            </div>
+                            {{ book_post.body }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="modal-footer">
+                    <form class="form" method="post">
+                        {{ form_annotate.hidden_tag() }}
+                        {{ wtf.form_errors(form_annotate, hiddens="only") }}
+                        {{ wtf.form_field(form_annotate.submit_yes, style = "background-color: #5C9A4F; color: white;") }}
+                        {{ wtf.form_field(form_annotate.submit_no, style = "background-color: #BA3E35; color: white;") }}
+                        {{ wtf.form_field(form_annotate.submit_notsure, style = "background-color: #E19A3F; color: white;") }}
+                        <input type="hidden" name="post_id" value="{{ book_post.id }}">
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endif %}

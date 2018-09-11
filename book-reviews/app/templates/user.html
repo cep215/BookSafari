@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block app_content %}
+    <style>
+        .change_container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .change_container .change_btn{
+            position: absolute;
+            bottom: 0%;
+            background-color: #555;
+            opacity: 0.85;
+            filter: alpha(opacity=85);
+            color: white;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            width: 100%;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        .change_container .change_btn:hover {
+            opacity: 0.85;
+            filter: alpha(opacity=85);
+            background-color: black;
+        }
+    </style>
+
+    <table class="table table-hover">
+        <tr>
+            <td width="256px">
+                <div class="change_container">
+                    <img width="256" src="{{ user.avatar(256) }}"/>
+                    {% if user == current_user %}
+                    <a data-toggle="modal" data-target="#upload_photo" class="change_btn"> Upload photo </a>
+                    <!-- Modal -->
+                    <div class="modal fade" id="upload_photo" role="dialog">
+                        <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  <h4 class="modal-title">Upload new profile photo</h4>
+                                </div>
+                                <br>
+                                <div class="modal-body">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        {{ form.hidden_tag() }}
+                                        {{ form.photo }}
+                                        <br><br>
+                                        {{ form.submit(class_="btn btn-primary") }}
+                                        {% for error in form.photo.errors %}
+                                         <span style="color: red;">{{ error }}</span>
+                                        {% endfor %}
+                                    </form>
+                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                <h1>User: {{ user.username }}</h1>
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}
+                <p>Last seen on: {{ moment(user.last_seen).format('LLL') }}</p>
+                {% endif %}
+                {% if user == current_user %}
+                <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+        {% for user_post in user_posts %}
+            {% include '_post_book.html' %}
+        {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> Newer posts
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    Older posts <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}

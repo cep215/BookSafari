@@ -1,0 +1,14 @@
+Dear Administrator,
+
+The following user wants to request admin access:
+
+username: {{ username }}
+email:    {{ email }}
+
+Click the following link to approve:
+
+{{ url_for('approve_admin', email=email, username=username, _external=True) }}
+
+Sincerely,
+
+The Book Safari Team

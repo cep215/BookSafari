@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Register</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+    <p>Request Admin Access to get argumentation corpora.
+        <a href="{{ url_for('admin_register') }}">Click to Register as Admin!</a>
+    </p>
+{% endblock %}

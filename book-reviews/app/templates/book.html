@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<script>
+
+{{ script | safe }}
+
+function like() {
+    var x = document.getElementById("like");
+    var y = document.getElementById("dislike");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+function dislike() {
+    var x = document.getElementById("like");
+    var y = document.getElementById("dislike");
+    if (y.style.display === "none") {
+        y.style.display = "block";
+        x.style.display = "none";
+    } else {
+        y.style.display = "none";
+    }
+}
+</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Likes', 'Liked Posts per Book'],
+          ['Likes',  {{ likes }}],
+          ['Dislikes',{{ dislikes }}]
+        ]);
+
+        var options = {
+            pieHole: 0.4,
+            legend: 'none',
+            backgroundColor: 'transparent',
+            chartArea:{width:'60%',height:'90%'},
+            fontSize: 14,
+            colors: ['#96BE5B', '#B84B46']
+
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        chart.draw(data, options);
+      }
+</script>
+
+	<table class="table table-hover">
+    <h1>{{ book.title|safe }}</h1>
+        <tr >
+            <td width="256px"><img src="{{ book.imUrl }}" height = "300">
+                <input type="image" src="/static/images/like.png" height = "70" style="margin-left: 20px; margin-top: 30px;" onclick="like()"/>
+                <input type="image" src="/static/images/dislike.png" height = "70" style="margin-left: 20px; margin-top: 30px;" onclick="dislike()"/>
+            </td>
+            <td>
+                {% if book.description %}
+                    <h4>Description: </h4>
+                    <p class="text-justify">
+                        {{ book.description|safe }}
+                    </p>
+                {% endif %}
+                {% if book.genre %}
+                    <p>
+                        <h4 style="display:inline;">Genre: </h4>{{ book.genre|safe }}
+                    </p>
+                {% endif %}
+                <p>
+                    <h4 style="display:inline;">Followers: </h4>{{ book.users.count() }}
+                </p>
+                {% if not current_user.is_following(book) %}
+                <p><a href="{{ url_for('follow', book_id=book.id) }}">Follow</a></p>
+                {% else %}
+                <p><a href="{{ url_for('unfollow', book_id=book.id) }}">Unfollow</a></p>
+                {% endif %}
+                <br>
+
+            </td>
+            <td>
+                <h4 class="text-center">Score </h4>
+                <div id="donutchart" style="width: 250px; height: 180px;"></div>
+            </td>
+
+
+
+    </table>
+    <hr>
+
+     <div style="display:none;" id="like">
+                {% if form_like %}
+                <form class="form" method="post">
+                  {{ form_like.hidden_tag() }}
+                  {{ wtf.form_errors(form_like, hiddens="only") }}
+
+                  {{ wtf.form_field(form_like.post, style = "background-color: #E3F1E6;") }}
+                  {{ wtf.form_field(form_like.submit_like) }}
+                </form>
+                <br>
+                {% endif %}
+            </div>
+
+
+            <div style="display:none;" id="dislike">
+                {% if form_dislike %}
+                <form class="form" method="post">
+                  {{ form_dislike.hidden_tag() }}
+                  {{ wtf.form_errors(form_dislike, hiddens="only") }}
+
+                  {{ wtf.form_field(form_dislike.post, style = "background-color: #EBC7CA;") }}
+                  {{ wtf.form_field(form_dislike.submit_dislike) }}
+                </form>
+                <br>
+                {% endif %}
+            </div>
+
+    <hr>
+
+    <div>
+        {{ wtf.quick_form(form_filter) }}
+    </div>
+
+    <hr>
+
+
+
+    {%- for book_post in book_posts recursive %}
+        <li class="list-group-item" style="border: 5px solid #ddd;"> {% include '_post_user.html' %}
+        {%- if book_post.children -%}
+            <ul class="list-group" style="border: 2px solid #ddd;">{{ loop(book_post.children) }}</ul>
+        {%- endif %}
+        </li>
+    {%- endfor %}
+
+
+     <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> Newer posts
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    Older posts <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+
+{% endblock %}

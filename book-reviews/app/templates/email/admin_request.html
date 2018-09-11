@@ -1,0 +1,13 @@
+<p>Dear Administrator,</p>
+<p>
+    The following user wants to request admin access:
+</p>
+<p>
+    username: {{ username }}
+    email:    {{ email }}
+</p>
+<p>Click the following link to approve:</p>
+<p>{{ url_for('approve_admin', email=email, username=username, _external=True) }}</p>
+
+<p>Sincerely,</p>
+<p>The Book Safari Team</p>
