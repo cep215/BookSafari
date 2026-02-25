@@ -1,60 +1,35 @@
 # BookSafari
 
-Get Started
-	$ pip install virtualenv
-	$ virtualvenv venv
-	$ source venv/bin/activate
-	$ pip install -r requirements.txt
-	$ export FLASK_APP=book-reviews.py
+BookSafari is a research web app for collecting **book reviews** and turning them into **structured argumentative dialogues** to support **argument mining** / NLP dataset creation.
 
-ELASTICSEARCH
-    $ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-    $ sudo apt-get install apt-transport-https
-    $ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
-    $ sudo apt-get update && sudo apt-get install elasticsearch
-    $ sudo service elasticsearch start
-    $ flask shell
-        Book.reindex()
+This repo is associated with the BookSafari paper:
+- https://spiral.imperial.ac.uk/entities/publication/a5c8a7ef-4ca0-4ee5-a2d3-f0d4cd0c183c
 
-VM:
-    $ flask run -h 0.0.0.0 -p 80
+---
 
-Supervisor:
-    $ pip install gunicorn
-    $ sudo apt-get supervisor
-    $ echo "export FLASK_APP=book-reviews.py" >> ~/.profile
-    $ vim /etc/supervisor/conf.d/book-reviews.conf
+## What this repo contains
 
-[program:book-reviews]
-command=/book-reviews/venv/bin/gunicorn -b 0.0.0.0:80 -w 4 book-reviews:app
-directory=/book-reviews
-user=root
-autostart=true
-autorestart=true
-stopasgroup=true
-killasgroup=true
+- A **Flask** web app for browsing/creating content (book reviews, posts, users)
+- **Elasticsearch** indexing for search
+- A relational DB via Flask-Migrate (Alembic)
 
-    $ sudo supervisord -c /etc/supervisor/supervisord.conf
-    $ service supervisor start
-    $ sudo supervisorctl -c /etc/supervisor/supervisord.conf
-    $ sudo supervisorctl reload
-    $ sudo unlink /var/run/supervisor.sock
+> Note: The original setup uses Elasticsearch 6.x (based on the install commands in the existing README).
 
+---
 
-DB
-	$ flask db init
-	$ flask db migrate -m "..."
-	$ flask db upgrade
+## Architecture (high level)
 
-	Delete elements in DB
-		>>> users = User.query.all()
-		>>> for u in users:
-		...     db.session.delete(u)
-		...
-		>>> posts = Post.query.all()
-		>>> for p in posts:
-		...     db.session.delete(p)
-		...
-		>>> db.session.commit()
+**Browser → Flask app → DB**  
+**Flask app → Elasticsearch** (for indexing + search)
 
+---
 
+## Quickstart (local dev)
+
+### 1) Create a virtualenv + install deps
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export FLASK_APP=book-reviews.py
