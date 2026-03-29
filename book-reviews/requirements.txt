@@ -28,7 +28,7 @@ numpy==1.14.2
 pandas==0.22.0
 passlib==1.7.1
 Pillow==5.1.0
-PyJWT==1.6.4
+PyJWT==2.4.0
 python-dateutil==2.7.2
 python-editor==1.0.3
 python-resize-image==1.1.11
